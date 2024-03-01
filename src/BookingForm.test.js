@@ -1,6 +1,6 @@
 // BookingForm.test.js
-
-import { render, screen } from "@testing-library/react";
+import React from 'react';
+import { render, screen , fireEvent } from "@testing-library/react";
 import BookingForm from './BookingForm';
 
 test('Renders the BookingForm heading', () => {
@@ -45,4 +45,40 @@ test('updateTimes function updates available booking times based on selected dat
   mockAvailableTimes.forEach((time, index) => {
     expect(options[index].textContent).toEqual(time);
   });
+});
+
+test('HTML5 validation attributes are applied to input fields', () => {
+  render(<BookingForm />);
+
+  const dateInput = screen.getByLabelText('Choose date');
+  expect(dateInput).toHaveAttribute('required');
+
+  const timeInput = screen.getByLabelText('Choose time');
+  expect(timeInput).toHaveAttribute('required');
+
+  const guestsInput = screen.getByLabelText('Number of guests');
+  expect(guestsInput).toHaveAttribute('required');
+
+  const occasionInput = screen.getByLabelText('Occasion');
+  expect(occasionInput).toHaveAttribute('required');
+});
+
+test('Validates form fields using JavaScript functions', () => {
+  render(<BookingForm />);
+
+  const dateInput = screen.getByLabelText('Choose date');
+  fireEvent.change(dateInput, { target: { value: '' } });
+  expect(screen.getByText('Date is required')).toBeInTheDocument();
+
+  const timeInput = screen.getByLabelText('Choose time');
+  fireEvent.change(timeInput, { target: { value: '' } });
+  expect(screen.getByText('Time is required')).toBeInTheDocument();
+
+  const guestsInput = screen.getByLabelText('Number of guests');
+  fireEvent.change(guestsInput, { target: { value: '0' } });
+  expect(screen.getByText('Number of guests must be between 1 and 10')).toBeInTheDocument();
+
+  const occasionInput = screen.getByLabelText('Occasion');
+  fireEvent.change(occasionInput, { target: { value: '' } });
+  expect(screen.getByText('Occasion is required')).toBeInTheDocument();
 });
