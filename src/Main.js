@@ -1,88 +1,77 @@
-import React, { useState, useReducer, useEffect } from 'react';
-import BookingForm from './BookingForm';
-import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useReducer } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import Homepage from './Homepage';
+import BookingPage from './BookingPage';
+import ConfirmedBooking from './ConfirmedBooking';
+import './Main.css'; // Import your CSS file
 
-const Main = () => {
-  // State variables for form fields
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('17:00');
-  const [guests, setGuests] = useState(1);
-  const [occasion, setOccasion] = useState('Birthday');
+function Main() {
+  // Function to initialize the initial state for availableTimes
+  function initializeTimes() {
+    return ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+  }
 
-  // Reducer for available times
-  const timesReducer = (state, action) => {
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Function to submit form data to the server
+  function submitAPI(formData) {
+    return fetch('https://example.com/submit-booking', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+      .then(response => response.json())
+      .catch(error => {
+        console.error('Error submitting form:', error);
+        throw error;
+      });
+  }
+
+  function submitForm(formData) {
+    submitAPI(formData)
+      .then(response => {
+        if (response.success) {
+          navigate('/booking-confirmed');
+        } else {
+          console.error('Form submission failed:', response.error); // Handle submission failure
+        }
+      })
+      .catch(error => {
+        console.error('Form submission error:', error); // Handle network errors
+      });
+  }
+
+  // Reducer function for managing state updates
+  function availableTimesReducer(state, action) {
     switch (action.type) {
       case 'UPDATE_TIMES':
-        return { ...state, availableTimes: action.payload };
+        // Logic to update availableTimes based on the selected date
+        // For now, let's assume availableTimes remains the same regardless of the date
+        return state;
       default:
         return state;
     }
-  };
+  }
 
-  const history = useHistory();
+  // useReducer hook to manage state updates
+  const [availableTimes, dispatch] = useReducer(availableTimesReducer, [], initializeTimes);
 
-  const submitForm = (formData) => {
-    // Logic to submit form data to the API
-    const bookingSuccessful = submitAPI(formData); // Assuming submitAPI is provided by the API library
-    if (bookingSuccessful) {
-      history.push('/confirmed-booking'); // Navigate to booking confirmation page
-    } else {
-      // Handle error or display notification to user
-    }
-  };
-
-  const initialState = {
-    availableTimes: [
-      '17:00',
-      '18:00',
-      '19:00',
-      '20:00',
-      '21:00',
-      '22:00'
-    ]
-  };
-
-  const [timesState, dispatchTimes] = useReducer(timesReducer, initialState);
-
-  // Function to update available times based on selected date
-  const updateTimes = (selectedDate) => {
-    // Logic to update available times based on selected date
-    const updatedTimes = ['17:00', '18:00', '19:00']; // Dummy data for now
-    dispatchTimes({ type: 'UPDATE_TIMES', payload: updatedTimes });
-  };
-
-  // Function to initialize available times
-  const initializeTimes = () => {
-    // Logic to initialize available times
-    const initialTimes = ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00']; // Initial available times
-    dispatchTimes({ type: 'UPDATE_TIMES', payload: initialTimes });
-  };
-
-  // Call initializeTimes when component mounts
-  useEffect(() => {
-    initializeTimes();
-  }, []);
+  // Function to handle state change based on the selected date
+  function updateTimes(selectedDate) {
+    dispatch({ type: 'UPDATE_TIMES', payload: selectedDate });
+  }
 
   return (
-    <div>
-      <h1>Little Lemon Reserve-a-Table</h1>
-      <BookingForm
-        date={date}
-        setDate={setDate}
-        time={time}
-        setTime={setTime}
-        guests={guests}
-        setGuests={setGuests}
-        occasion={occasion}
-        setOccasion={setOccasion}
-        availableTimes={timesState.availableTimes}
-        updateTimes={updateTimes}
-      />
-       <h1>Little Lemon Reserve-a-Table</h1>
-      <BookingForm onSubmit={submitForm} />
-    </div>
+    <main className="main-container">
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/booking" element={<BookingPage availableTimes={availableTimes} updateTimes={updateTimes} submitForm={submitForm} />} />
+        <Route path="/booking-confirmed" element={<ConfirmedBooking />} /> {/* Route for ConfirmedBooking component */}
+      </Routes>
+    </main>
   );
-};
+}
 
 export default Main;

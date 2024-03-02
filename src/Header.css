@@ -1,31 +1,93 @@
-/* Header.css */
-
 .header {
+    background-color: #333;
+    background: #2980b9;
+ box-shadow: 0 5px 10px rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    text-align: center;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .header img {
+    width: 50px; /* Adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Adjust spacing between image and text */
+    border-radius: 50%; /* Make the image circular */
 }
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.nav-list {
-    list-style-type: none;
-    padding: 0;
+  .navbar {
+    overflow: hidden;
+    text-align: right;
+    background: #2980b9;
+ box-shadow: 0 5px 10px rgba(255, 255, 255, 0.1);
+  }
+  .navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  .navbar a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  .dropdown {
+    float: right;
+    overflow: hidden;
+  }
+  .dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
     margin: 0;
-    display: flex;
-}
-
-.nav-item {
-    margin-right: 20px;
-    cursor: pointer;
-}
-
-.nav-item:hover {
-    text-decoration: underline;
-}
+  }
+  .navbar a.active {
+    background-color: #333;
+    color: white;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  .dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+  .show {
+    display: block;
+  }
+  @media screen and (max-width: 600px) {
+    .navbar a, .dropdown .dropbtn {
+      float: none;
+      display: block;
+      text-align: left;
+    }
+    .navbar {
+      overflow: auto;
+    }
+    .dropdown {
+      float: none;
+    }
+    .dropdown-content {
+      position: static;
+      display: none;
+      overflow: auto;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  }

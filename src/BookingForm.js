@@ -1,96 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
+import './BookingForm.css'; // Import your CSS file for styling
 
-const BookingForm = ({
-  date,
-  setDate,
-  time,
-  setTime,
-  guests,
-  setGuests,
-  occasion,
-  setOccasion,
-  availableTimes,
-  updateTimes
-}) => {
-  const [formValid, setFormValid] = useState(true);
-  const [errors, setErrors] = useState({});
-  // Handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = {
-      date,
-      time,
-      guests,
-      occasion
-    };
-    onSubmit(formData); // Call submitForm function passed via props
-  };
+function BookingForm({ availableTimes, dispatch, submitForm }) {
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('17:00');
+  const [guests, setGuests] = useState(1);
+  const [occasion, setOccasion] = useState('Birthday');
+  const [isFormValid, setIsFormValid] = useState(false); // State to track form validity
 
-  const validateForm = () => {
-    const validationErrors = {};
-    // Add validation logic here
-    if (!date) {
-      validationErrors.date = 'Date is required';
-    }
-    if (!time) {
-      validationErrors.time = 'Time is required';
-    }
-    if (!guests || guests < 1 || guests > 10) {
-      validationErrors.guests = 'Number of guests must be between 1 and 10';
-    }
-    if (!occasion) {
-      validationErrors.occasion = 'Occasion is required';
-    }
-    setErrors(validationErrors);
-    setFormValid(Object.keys(validationErrors).length === 0);
-  };
+  // Validation function
+  function validateForm() {
+    const isValid = date && guests >= 1; // Example validation logic
+    setIsFormValid(isValid);
+  }
 
-  // Handle date change
-  const handleDateChange = (e) => {
-    const selectedDate = e.target.value;
-    setDate(selectedDate);
-    updateTimes(selectedDate); // Dispatch state change for available times
-  };
+  // Event handlers for input changes
+  function handleDateChange(e) {
+    setDate(e.target.value);
+    validateForm();
+  }
+
+  function handleGuestsChange(e) {
+    setGuests(e.target.value);
+    validateForm();
+  }
+
+  // Event handler for form submission
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (isFormValid) {
+      submitForm({ date, time, guests, occasion });
+    } else {
+      alert('Please fill out all required fields.'); // Handling invalid form submission
+    }
+  }
 
   return (
-    <div>
-    <header>
-      <h1>Little Lemon Reserve-a-Table</h1>
-    </header>
-    <main>
-    <form style={{ display: 'grid', maxWidth: '200px', gap: '20px' }} onSubmit={handleSubmit}>
-      <label htmlFor="res-date">Choose date</label>
-      <input type="date" id="res-date" value={date} onChange={(e) => setDate(e.target.value)} required />
-      {errors.date && <div className="error">{errors.date}</div>}
+    <form className="booking-form" onSubmit={handleSubmit}>
+      <label htmlFor="res-date">Choose Date:</label>
+      <input type="date" id="res-date" value={date} onChange={handleDateChange} required />
 
-      <label htmlFor="res-time">Choose time</label>
+      <label htmlFor="res-time">Choose Time:</label>
       <select id="res-time" value={time} onChange={(e) => setTime(e.target.value)} required>
-        {availableTimes.map((availableTime, index) => (
-          <option key={index}>{availableTime}</option>
+        {availableTimes.map((time) => (
+          <option key={time} value={time}>{time}</option>
         ))}
       </select>
-      {errors.time && <div className="error">{errors.time}</div>}
 
-      <label htmlFor="guests">Number of guests</label>
-      <input type="number" placeholder="1" min="1" max="10" id="guests" value={guests} onChange={(e) => setGuests(e.target.value)} required />
-      {errors.guests && <div className="error">{errors.guests}</div>}
+      <label htmlFor="guests">Number of Guests:</label>
+      <input type="number" min="1" max="10" id="guests" value={guests} onChange={handleGuestsChange} required />
 
-      <label htmlFor="occasion">Occasion</label>
-      <select id="occasion" value={occasion} onChange={(e) => setOccasion(e.target.value)} required>
-        <option value="">Select an occasion</option>
-        <option>Birthday</option>
-        <option>Anniversary</option>
+      <label htmlFor="occasion">Occasion:</label>
+      <select id="occasion" value={occasion} onChange={(e) => setOccasion(e.target.value)}>
+        <option value="Birthday">Birthday</option>
+        <option value="Anniversary">Anniversary</option>
       </select>
-      {errors.occasion && <div className="error">{errors.occasion}</div>}
 
-      <input type="submit" value="Make Your reservation" disabled={!formValid} />
+      <input type="submit" value="Make Your Reservation" className="submit-btn" disabled={!isFormValid} />
     </form>
-    </main>
-      <footer>
-        <p>&copy; 2024 Little Lemon</p>
-      </footer>
-    </div>
   );
-};
+}
 
 export default BookingForm;

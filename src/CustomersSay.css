@@ -1,0 +1,34 @@
+.customers-say {
+    background-color: #f0f0f0;
+    padding: 2rem;
+  }
+  
+  .customers-say h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .testimonials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .testimonial {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    flex: 1 0 300px; /* Adjust as needed */
+  }
+  
+  .testimonial p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+  
+  .rating {
+    color: gold;
+  }
+  

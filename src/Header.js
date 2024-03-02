@@ -1,18 +1,18 @@
 import React from 'react';
-import './Header.css';
+import logo from './OIP.jpg'; // Import the image file
+import Nav from './Nav';
+import './header.css'; // Import your CSS file
 
-export default function Header() {
-    return (
-        <header className="header">
-            <div className="logo">Restaurant Logo</div>
-            <nav className="nav">
-                <ul className="nav-list">
-                    <li className="nav-item">Home</li>
-                    <li className="nav-item">Menu</li>
-                    <li className="nav-item">About</li>
-                    <li className="nav-item">Contact</li>
-                </ul>
-            </nav>
-        </header>
-    );
+function Header() {
+  return (
+    <header>
+        <div class="header">
+            <img src={logo}></img>
+            <h2>Little Lemon</h2>
+        </div>
+    </header>
+
+  );
 }
+
+export default Header;

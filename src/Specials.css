@@ -1,0 +1,34 @@
+.specials {
+    background-color: #f9f9f9;
+    padding: 2rem;
+  }
+  
+  .specials h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .specials-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .special-item {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 5px;
+  }
+  
+  .special-item h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .special-item p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
